@@ -43,7 +43,7 @@ class TestUrbanRoutes:
         routes_page.set_route(data.ADDRESS_FROM, data.ADDRESS_TO)
         routes_page.input_phone_number(data.PHONE_NUMBER)
         filled_phone_number = routes_page.get_phone_number()
-        assert routes_page.get_phone_number() == data.PHONE_NUMBER
+        assert filled_phone_number == data.PHONE_NUMBER
 
     def test_fill_card(self):
         self.driver.get(data.URBAN_ROUTES_URL)
@@ -51,20 +51,24 @@ class TestUrbanRoutes:
         routes_page.set_route(data.ADDRESS_FROM, data.ADDRESS_TO)
         routes_page.click_payment_method_button()
         routes_page.input_card_number(data.CARD_NUMBER, data.CARD_CODE)
-        assert routes_page.get_new_card_text() == "Card"
+        assert routes_page.get_card_number() == data.CARD_NUMBER
 
     def test_comment_for_driver(self):
         self.driver.get(data.URBAN_ROUTES_URL)
         routes_page = UrbanRoutesPage(self.driver)
         routes_page.set_route(data.ADDRESS_FROM, data.ADDRESS_TO)
-        routes_page.message_driver
+        routes_page.message_driver(data.MESSAGE_FOR_DRIVER)
+        assert routes_page.get_message_for_driver() == data.MESSAGE_FOR_DRIVER
 
     def test_order_blanket_and_handkerchiefs(self):
         self.driver.get(data.URBAN_ROUTES_URL)
         routes_page = UrbanRoutesPage(self.driver)
         routes_page.set_route(data.ADDRESS_FROM, data.ADDRESS_TO)
+        routes_page.select_supportive_plan()
+        import time
+        time.sleep(3)
         routes_page.order_blanket_and_handkerchiefs()
-
+        assert routes_page.get_blanket_checked() == True
 
     def test_order_2_icecreams(self):
         self.driver.get(data.URBAN_ROUTES_URL)
@@ -75,14 +79,16 @@ class TestUrbanRoutes:
         for i in range(2):    # Loop will iterate twice
             routes_page.click_add_icecream()
         print("Function created for order 2 ice creams")
+        assert routes_page.get_icecream() == '2'
 
     def test_car_search_model_appears(self):
         self.driver.get(data.URBAN_ROUTES_URL)
         routes_page = UrbanRoutesPage(self.driver)
         routes_page.set_route(data.ADDRESS_FROM, data.ADDRESS_TO)
-        routes_page.message_driver
+        routes_page.message_driver(data.MESSAGE_FOR_DRIVER)
         routes_page.select_search()
         print("Function created for car search model appears")
+        assert routes_page.display_car_model() == True
 
     @classmethod
     def teardown_class(cls):

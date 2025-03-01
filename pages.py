@@ -24,15 +24,18 @@ class UrbanRoutesPage:
     payment_method_button = (By.CLASS_NAME, 'pp-text')
     add_card_button = (By.XPATH, '//div[contains(text(), "Add card")]')
     enter_card_number_field = (By.ID, 'number')
-    new_card = (By.XPATH, '//div[contains(text(), "Card")]')
     enter_card_code_field = (By.XPATH, '//input[@class="card-input" and @id="code"]')
+    new_card = (By.XPATH, '//div[contains(text(), "Card")]')
     link_button = (By.XPATH, '//button[contains(text(), "Link")]')
-    message_for_driver = (By.CLASS_NAME, 'label')
+    message_for_driver_field = (By.XPATH, '//input[@class="input" and @id="comment"]')
     order_requirements = (By.CLASS_NAME, 'reqs-head')
-    select_blanket_and_handkerchiefs = (By.CLASS_NAME, 'r-sw-label')
+    select_blanket_and_handkerchiefs = (By.XPATH, '//*[@id="root"]/div/div[3]/div[3]/div[2]/div[2]/div[4]/div[2]/div[1]/div/div[2]/div/span')
     adding_icecream = (By.CLASS_NAME, 'r-counter-label')
     add_icecream = (By.CLASS_NAME, 'counter-plus')
     search_model = (By.CLASS_NAME, 'smart-button-main')
+    blanket_checked = (By.XPATH, '//*[@id="root"]/div/div[3]/div[3]/div[2]/div[2]/div[4]/div[2]/div[1]/div/div[2]/div/input')
+    icecream_counter_value = (By.XPATH, '//div[@class="counter-value"]')
+
 
 
     def __init__(self, driver):
@@ -89,9 +92,6 @@ class UrbanRoutesPage:
         self.driver.find_element(*self.payment_method_button).click()
         self.driver.find_element(*self.add_card_button).click()
 
-    def get_new_card_text(self):
-        return self.driver.find_element(*self.new_card).text
-
     def input_card_number(self, card_number, card_code):
         self.driver.find_element(*self.enter_card_number_field).click()
         self.driver.find_element(*self.enter_card_number_field).send_keys(card_number)
@@ -99,22 +99,39 @@ class UrbanRoutesPage:
         self.driver.find_element(*self.enter_card_code_field).send_keys(Keys.TAB)
         self.driver.find_element(*self.link_button).click()
 
+    def get_new_card_text(self):
+        return self.driver.find_element(*self.enter_card_number_field).get_attribute('textContent')
+
+    def get_card_number(self):
+        return self.driver.find_element(*self.enter_card_number_field).get_attribute('value')
+
     def get_card_code(self):
         return self.driver.find_element(*self.enter_card_code_field).get_attribute('textContent')
 
     def message_driver(self, message_for_driver):
-        self.driver.find_element(*self.enter_card_code_field).send_keys(message_for_driver)
+        self.driver.find_element(*self.message_for_driver_field).send_keys(message_for_driver)
+
+    def get_message_for_driver(self):
+        time.sleep(2)
+        return self.driver.find_element(*self.message_for_driver_field).get_attribute('value')
 
     def order_blanket_and_handkerchiefs(self):
-        self.driver.find_element(*self.order_requirements).click()
         self.driver.find_element(*self.select_blanket_and_handkerchiefs).click()
+
+    def get_blanket_checked(self):
+        return self.driver.find_element(*self.blanket_checked).get_property('checked')
 
     def click_add_icecream(self):
         self.driver.find_element(*self.add_icecream).click()
 
+    def get_icecream(self):
+        return self.driver.find_element(*self.icecream_counter_value).text
+
     def select_search(self):
         self.driver.find_element(*self.search_model).click()
 
+    def display_car_model(self):
+        return self.driver.find_element(*self.search_model).is_displayed()
 
 
 
